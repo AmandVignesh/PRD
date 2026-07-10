@@ -1,0 +1,42 @@
+# Node dependencies
+node_modules/
+**/node_modules/
+
+# Production build artifacts
+dist/
+**/dist/
+
+# SQLite databases and journal files
+*.db
+*.db-journal
+focus.db
+focus.db-journal
+backend/focus.db
+backend/focus.db-journal
+
+# Local environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+.DS_Store
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# System or Agent temporary folders
+.system_generated/
+.tempmediaStorage/
+browser/
+scratch/
