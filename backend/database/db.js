@@ -2,8 +2,16 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
 
-// Ensure the database file is placed in the backend directory
-const dbPath = path.join(__dirname, '../focus.db');
+// Resolve database path (supports custom paths for persistent cloud volumes)
+const dbPath = process.env.DB_PATH 
+  ? path.resolve(process.env.DB_PATH) 
+  : path.join(__dirname, '../focus.db');
+
+// Auto-create directory if it doesn't exist (crucial for mounted persistent disks)
+const dbDir = path.dirname(dbPath);
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true });
+}
 
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
