@@ -3,14 +3,21 @@ const path = require('path');
 const fs = require('fs');
 
 // Resolve database path (supports custom paths for persistent cloud volumes)
-const dbPath = process.env.DB_PATH 
+let dbPath = process.env.DB_PATH 
   ? path.resolve(process.env.DB_PATH) 
   : path.join(__dirname, '../focus.db');
 
-// Auto-create directory if it doesn't exist (crucial for mounted persistent disks)
+// Auto-create directory if it doesn't exist (with permission error fallbacks)
 const dbDir = path.dirname(dbPath);
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
+try {
+  if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+  }
+} catch (error) {
+  console.warn(`\n⚠️ DATABASE DIRECTORY WRITING FAILED:`);
+  console.warn(`Could not create or write to '${dbDir}' (${error.message}).`);
+  console.warn(`Falling back to local database inside the project directory.\n`);
+  dbPath = path.join(__dirname, '../focus.db');
 }
 
 const db = new sqlite3.Database(dbPath, (err) => {
